@@ -106,6 +106,7 @@ export class MergeEngine {
 
     // Merge adjacent same-value tiles
     const merged: Tile[] = [];
+    let mergeOccurred = false;
     let i = 0;
     while (i < tiles.length) {
       if (i + 1 < tiles.length && tiles[i].value === tiles[i + 1].value) {
@@ -121,6 +122,7 @@ export class MergeEngine {
         merged.push(newTile);
         result.score += newValue;
         result.merges.push({ row: 0, col: 0, value: newValue });
+        mergeOccurred = true;
         i += 2; // Skip the next tile
       } else {
         merged.push(tiles[i]);
@@ -152,6 +154,11 @@ export class MergeEngine {
         // Clear remaining cells
         this.board.setTile(row, col, null);
       }
+    }
+
+    // A merge counts as a move even if positions didn't change
+    if (mergeOccurred) {
+      result.moved = true;
     }
 
     return result;

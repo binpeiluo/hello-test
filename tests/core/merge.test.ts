@@ -43,7 +43,7 @@ describe('MergeEngine', () => {
       const result = engine.move('left');
 
       expect(result.moved).toBe(true);
-      expect(result.score).toBe(8); // 4 + 8
+      expect(result.score).toBe(12); // 4 + 8
       expect(board.getTile(0, 0)!.value).toBe(4);
       expect(board.getTile(0, 1)!.value).toBe(8);
     });
@@ -137,7 +137,7 @@ describe('MergeEngine', () => {
 
       expect(result.moved).toBe(true);
       expect(result.merges.length).toBe(2);
-      expect(result.score).toBe(8); // 4 + 8
+      expect(result.score).toBe(12); // 4 + 8
     });
   });
 
