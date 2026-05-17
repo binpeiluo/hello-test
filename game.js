@@ -210,6 +210,7 @@ class MergeEngine {
 
     // Merge adjacent same-value tiles
     const merged = [];
+    let hasMerge = false;
     let i = 0;
     while (i < tiles.length) {
       if (i + 1 < tiles.length && tiles[i].value === tiles[i + 1].value) {
@@ -224,6 +225,7 @@ class MergeEngine {
         merged.push(newTile);
         result.score += newValue;
         result.merges.push({ row: 0, col: 0, value: newValue });
+        hasMerge = true;
         i += 2;
       } else {
         merged.push(tiles[i]);
@@ -253,6 +255,9 @@ class MergeEngine {
         this.board.setTile(row, col, null);
       }
     }
+
+    // Any merge counts as a move
+    if (hasMerge) result.moved = true;
 
     return result;
   }
