@@ -559,6 +559,22 @@ const SaveManager = {
   }
 };
 
+// ==================== roundRect Polyfill ====================
+function drawRoundRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + w - radius, y);
+  ctx.arcTo(x + w, y, x + w, y + radius, radius);
+  ctx.lineTo(x + w, y + h - radius);
+  ctx.arcTo(x + w, y + h, x + w - radius, y + h, radius);
+  ctx.lineTo(x + radius, y + h);
+  ctx.arcTo(x, y + h, x, y + h - radius, radius);
+  ctx.lineTo(x, y + radius);
+  ctx.arcTo(x, y, x + radius, y, radius);
+  ctx.closePath();
+}
+
 // ==================== Renderer Module ====================
 const TILE_COLORS = {
   2: '#eee4da', 4: '#ede0c8', 8: '#f2b179', 16: '#f67c5f',
@@ -632,8 +648,7 @@ class Renderer {
     const boardHeight = this.tileSize * boardSize + this.padding * (boardSize + 1);
 
     this.ctx.fillStyle = '#bbada0';
-    this.ctx.beginPath();
-    this.ctx.roundRect(this.boardOffsetX, this.boardOffsetY, boardWidth, boardHeight, 8);
+    drawRoundRect(this.ctx, this.boardOffsetX, this.boardOffsetY, boardWidth, boardHeight, 8);
     this.ctx.fill();
 
     for (let row = 0; row < boardSize; row++) {
@@ -642,8 +657,7 @@ class Renderer {
         const y = this.boardOffsetY + this.padding + row * (this.tileSize + this.padding);
 
         this.ctx.fillStyle = 'rgba(238, 228, 218, 0.35)';
-        this.ctx.beginPath();
-        this.ctx.roundRect(x, y, this.tileSize, this.tileSize, 6);
+        drawRoundRect(this.ctx, x, y, this.tileSize, this.tileSize, 6);
         this.ctx.fill();
       }
     }
@@ -664,8 +678,7 @@ class Renderer {
 
     const bgColor = TILE_COLORS[tile.value] || '#3c3a32';
     this.ctx.fillStyle = bgColor;
-    this.ctx.beginPath();
-    this.ctx.roundRect(x, y, this.tileSize, this.tileSize, 6);
+    drawRoundRect(this.ctx, x, y, this.tileSize, this.tileSize, 6);
     this.ctx.fill();
 
     const textColor = TEXT_COLORS[tile.value] || '#f9f6f2';
@@ -696,14 +709,12 @@ class Renderer {
     const barY = y + 15;
 
     this.ctx.fillStyle = '#eee4da';
-    this.ctx.beginPath();
-    this.ctx.roundRect(barX, barY, barWidth, barHeight, 10);
+    drawRoundRect(this.ctx, barX, barY, barWidth, barHeight, 10);
     this.ctx.fill();
 
     const fillWidth = Math.min(barWidth, (progress.current / progress.target) * barWidth);
     this.ctx.fillStyle = progress.completed ? '#8f7a66' : '#bbada0';
-    this.ctx.beginPath();
-    this.ctx.roundRect(barX, barY, fillWidth, barHeight, 10);
+    drawRoundRect(this.ctx, barX, barY, fillWidth, barHeight, 10);
     this.ctx.fill();
 
     this.ctx.fillStyle = '#776e65';
@@ -743,8 +754,7 @@ class Renderer {
 
   drawButton(text, x, y, width, height) {
     this.ctx.fillStyle = '#8f7a66';
-    this.ctx.beginPath();
-    this.ctx.roundRect(x - width / 2, y - height / 2, width, height, 6);
+    drawRoundRect(this.ctx, x - width / 2, y - height / 2, width, height, 6);
     this.ctx.fill();
 
     this.ctx.fillStyle = '#f9f6f2';
@@ -951,5 +961,5 @@ function start() {
   initGame(currentLevelId);
 }
 
-// Export for WeChat
-module.exports = { start };
+// Start game
+start();
